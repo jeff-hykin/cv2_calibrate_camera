@@ -8,7 +8,7 @@
         run_ruby_example: !language/ruby |
             puts 'this is just a default value'
             puts 'replace this with your own ruby code'
-        (setup): echo 'setup command unset' 
+        (setup): ruby setup.rb
     
     (advanced_setup):
         (project_commands):
