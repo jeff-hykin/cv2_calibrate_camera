@@ -5,6 +5,9 @@ import glob
 # termination criteria
 criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
 
+
+# checkerboard needs to be 6x7 
+
 # prepare object points, like (0,0,0), (1,0,0), (2,0,0) ....,(6,5,0)
 objp = np.zeros((6*7,3), np.float32)
 objp[:,:2] = np.mgrid[0:7,0:6].T.reshape(-1,2)
@@ -13,7 +16,7 @@ objp[:,:2] = np.mgrid[0:7,0:6].T.reshape(-1,2)
 objpoints = [] # 3d point in real world space
 imgpoints = [] # 2d points in image plane.
 
-images = glob.glob('*.png') + glob.glob('*.jpg') + glob.glob('*.jpeg')
+images = glob.glob('*.jpg') + glob.glob('*.jpeg')
 
 for file_name in images:
     img = cv2.imread(file_name)
@@ -35,7 +38,7 @@ for file_name in images:
         retval, camera_matrix, distortion_coefficients, rotation_vector, translation_vector = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1], None, None)
         print('camera_matrix = ', camera_matrix)
         print('distortion_coefficients = ', distortion_coefficients)
-        cv2.waitKey(5000)
+        # cv2.waitKey(20000)
         
         mtx = camera_matrix
         dist = distortion_coefficients
@@ -47,12 +50,13 @@ for file_name in images:
         h,  w = img.shape[:2]
         newcameramtx, roi = cv2.getOptimalNewCameraMatrix(mtx,dist,(w,h),1,(w,h))
         
+        cv2.imwrite('intermediate.png',img)
         # undistort
         dst = cv2.undistort(img, mtx, dist, None, newcameramtx)
 
         # crop the image
-        x,y,w,h = roi
-        dst = dst[y:y+h, x:x+w]
+        # x,y,w,h = roi
+        # dst = dst[y:y+h, x:x+w]
         cv2.imwrite('calibresult.png',dst)
         
 
